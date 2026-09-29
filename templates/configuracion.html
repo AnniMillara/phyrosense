@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Configuración{% endblock %}
+{% block category %}SISTEMA{% endblock %}
+{% block page_title %}Configuración{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <span>SISTEMA</span>
+    <h2>Configuración personal</h2>
+    <p>Ajusta tus preferencias. Estos cambios solo afectan a tu cuenta.</p>
+</div>
+
+<div class="settings-grid">
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <span class="panel-label">PREFERENCIAS</span>
+                <h3>Mis preferencias</h3>
+            </div>
+        </div>
+        <form method="POST" id="configForm">
+            <label class="toggle-setting">
+                <div>
+                    <strong>Notificaciones</strong>
+                    <small>Recibir avisos de nuevas alertas</small>
+                </div>
+                <input type="checkbox" name="notificaciones" {% if config.notificaciones %}checked{% endif %}>
+                <span class="toggle"></span>
+            </label>
+            <label class="toggle-setting">
+                <div>
+                    <strong>Actualización automática</strong>
+                    <small>Actualizar datos automáticamente en el dashboard</small>
+                </div>
+                <input type="checkbox" name="auto_update" {% if config.auto_update %}checked{% endif %}>
+                <span class="toggle"></span>
+            </label>
+            <label class="toggle-setting">
+                <div>
+                    <strong>Ubicación</strong>
+                    <small>Compartir ubicación para alertas por cercanía</small>
+                </div>
+                <input type="checkbox" name="ubicacion" {% if config.ubicacion %}checked{% endif %}>
+                <span class="toggle"></span>
+            </label>
+            <button type="submit" class="btn" style="margin-top:16px;">
+                <i class="fas fa-save"></i> Guardar preferencias
+            </button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <span class="panel-label">INFORMACIÓN</span>
+                <h3>Tu cuenta</h3>
+            </div>
+        </div>
+        <div style="padding:10px 0; border-bottom:1px solid var(--border);">
+            <strong style="display:block; font-size:12px;">Usuario</strong>
+            <span style="font-size:11px; color:var(--text-gray);">{{ session.usuario }}</span>
+        </div>
+        <div style="padding:10px 0; border-bottom:1px solid var(--border);">
+            <strong style="display:block; font-size:12px;">Rol</strong>
+            <span style="font-size:11px; color:var(--text-gray);">{{ session.tipo }}</span>
+        </div>
+        <div style="padding:10px 0;">
+            <strong style="display:block; font-size:12px;">Nombre completo</strong>
+            <span style="font-size:11px; color:var(--text-gray);">{{ session.nombre_completo }}</span>
+        </div>
+        <div style="margin-top:12px; padding:12px; background:#fef9e7; border-radius:8px; font-size:9px; color:#7d6b00;">
+            <i class="fas fa-info-circle"></i> 
+            Las preferencias se guardan en tu cuenta y se mantienen entre sesiones.
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('configForm').addEventListener('submit', function() {
+        const ubicacionCheck = document.querySelector('input[name="ubicacion"]');
+        if (ubicacionCheck && window.setUbicacion) {
+            window.setUbicacion(ubicacionCheck.checked);
+        }
+    });
+</script>
+{% endblock %}
