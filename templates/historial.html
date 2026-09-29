@@ -8,7 +8,7 @@
 <div class="page-heading">
     <span>DATOS</span>
     <h2>Historial de mediciones</h2>
-    <p>Consulta la evolución de las variables ambientales.</p>
+    <p>Consulta la evolución de las variables ambientales monitoreadas.</p>
 </div>
 
 <div class="panel">
@@ -19,7 +19,7 @@
         </div>
         <form method="GET" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             <select name="estacion">
-                <option value="">Todas las estaciones</option>
+                <option value="">Todos los dispositivos</option>
                 {% for e in estaciones %}
                 <option value="{{ e.id_estacion }}" {% if estacion_seleccionada == e.id_estacion|string %}selected{% endif %}>{{ e.nombre }}</option>
                 {% endfor %}
@@ -39,19 +39,19 @@
     <div class="history-table">
         <div class="history-row history-header">
             <span data-label="FECHA">FECHA</span>
-            <span data-label="ZONA">ZONA</span>
+            <span data-label="DISPOSITIVO">DISPOSITIVO</span>
             <span data-label="TEMPERATURA">TEMPERATURA</span>
             <span data-label="HUMEDAD">HUMEDAD</span>
-            <span data-label="HUMO">HUMO</span>
+            <span data-label="HUMO/GAS">HUMO/GAS</span>
             <span data-label="RIESGO">RIESGO</span>
         </div>
         {% for m in mediciones %}
         <div class="history-row">
             <span data-label="FECHA">{{ m.fecha_hora }}</span>
-            <span data-label="ZONA">{{ m.estacion }}</span>
+            <span data-label="DISPOSITIVO">{{ m.estacion }}</span>
             <span data-label="TEMPERATURA">{{ m.temperatura if m.temperatura is not none else '—' }} °C</span>
             <span data-label="HUMEDAD">{{ m.humedad if m.humedad is not none else '—' }} %</span>
-            <span data-label="HUMO">{{ m.humo_nombre or '—' }}</span>
+            <span data-label="HUMO/GAS">{{ m.humo_nombre or '—' }}</span>
             <span data-label="RIESGO" class="{% if m.nivel_riesgo == 'NORMAL' %}risk-low{% elif m.nivel_riesgo == 'RIESGO_MODERADO' %}risk-medium{% else %}risk-high{% endif %}">
                 {{ m.nivel_riesgo or 'NORMAL' }}
             </span>

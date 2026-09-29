@@ -7,8 +7,8 @@
 {% block content %}
 <div class="page-heading">
     <span>MONITOREO GEOGRÁFICO</span>
-    <h2>Zonas monitoreadas</h2>
-    <p>Visualiza las estaciones ForestGuard y el nivel de riesgo de cada zona.</p>
+    <h2>Espacios monitoreados</h2>
+    <p>Visualiza los dispositivos PhyroSense y el nivel de riesgo de cada zona.</p>
 </div>
 
 <div class="zones-layout">
@@ -16,7 +16,7 @@
         <div class="panel-header">
             <div>
                 <span class="panel-label">MAPA</span>
-                <h3>Estaciones ForestGuard</h3>
+                <h3>Dispositivos PhyroSense</h3>
             </div>
             <button class="map-button" type="button" aria-label="Expandir mapa" onclick="alert('Función de expandir mapa aún no implementada.')">
                 <i class="fa-solid fa-expand"></i>
@@ -30,8 +30,8 @@
     <div class="panel">
         <div class="panel-header">
             <div>
-                <span class="panel-label">ESTACIONES</span>
-                <h3>Estado de las zonas</h3>
+                <span class="panel-label">DISPOSITIVOS</span>
+                <h3>Estado por zona</h3>
             </div>
         </div>
         <div class="zone-list">
@@ -44,7 +44,7 @@
                     <strong>{{ est.nombre }}</strong>
                     <small>
                         {% if est.ult_temp is not none %}Temp {{ est.ult_temp }}°C · Hum {{ est.ult_humedad }}%{% else %}Sin datos{% endif %}
-                        {% if est.ult_humo %} · Humo {{ est.ult_humo }}{% endif %}
+                        {% if est.ult_humo %} · Humo/Gas {{ est.ult_humo }}{% endif %}
                     </small>
                 </div>
                 <b class="{% if est.estado_nombre == 'ONLINE' %}risk-low{% elif est.estado_nombre == 'OFFLINE' %}risk-high{% else %}risk-medium{% endif %}">
@@ -52,7 +52,7 @@
                 </b>
             </div>
             {% else %}
-            <div class="zone-item"><div><strong>No hay estaciones registradas</strong></div></div>
+            <div class="zone-item"><div><strong>No hay dispositivos registrados</strong></div></div>
             {% endfor %}
         </div>
     </div>

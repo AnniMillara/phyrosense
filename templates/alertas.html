@@ -14,11 +14,11 @@
 <div class="alerts-summary">
     <div class="alert-summary-card">
         <strong>{{ alertas|selectattr('nivel', 'equalto', 'ALERTA')|list|length }}</strong>
-        <span>Críticas</span>
+        <span>Alertas críticas</span>
     </div>
     <div class="alert-summary-card">
         <strong>{{ alertas|selectattr('nivel', 'equalto', 'RIESGO_ALTO')|list|length }}</strong>
-        <span>Advertencias</span>
+        <span>Riesgos altos</span>
     </div>
     <div class="alert-summary-card">
         <strong>{{ alertas|selectattr('estado', 'equalto', 'RESUELTA')|list|length }}</strong>
@@ -36,7 +36,7 @@
             <select id="filterAlerts" onchange="window.location.href='?filtro='+this.value">
                 <option value="activas" {% if filtro=='activas' %}selected{% endif %}>Activas</option>
                 <option value="todas" {% if filtro=='todas' %}selected{% endif %}>Todas</option>
-                <option value="incendio" {% if filtro=='incendio' %}selected{% endif %}>Posible incendio</option>
+                <option value="incendio" {% if filtro=='incendio' %}selected{% endif %}>Situación de riesgo</option>
                 <option value="resueltas" {% if filtro=='resueltas' %}selected{% endif %}>Resueltas</option>
             </select>
         </div>
@@ -46,7 +46,7 @@
         {% for alerta in alertas %}
         <div class="full-alert {% if alerta.nivel == 'ALERTA' %}danger{% elif alerta.nivel == 'RIESGO_ALTO' %}warning{% else %}normal{% endif %}">
             <div class="full-alert-icon">
-                <i class="fa-solid fa-{% if alerta.nivel == 'ALERTA' %}fire{% elif alerta.nivel == 'RIESGO_ALTO' %}temperature-high{% else %}check{% endif %}"></i>
+                <i class="fa-solid fa-{% if alerta.nivel == 'ALERTA' %}triangle-exclamation{% elif alerta.nivel == 'RIESGO_ALTO' %}fire-flame-curved{% else %}check{% endif %}"></i>
             </div>
             <div>
                 <strong>{{ alerta.titulo }}</strong>
@@ -57,13 +57,13 @@
             {% if puede_gestionar and alerta.id_estado_alerta == 1 %}
             <div style="display:flex; gap:5px;">
                 <form method="POST" action="{{ url_for('atender_alerta', id_alerta=alerta.id_alerta) }}" style="display:inline;">
-                    <button type="submit" class="btn btn-sm" style="background:#e5a500;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Atender</button>
+                    <button type="submit" class="btn btn-sm" style="background:#EAB308;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Atender</button>
                 </form>
                 <form method="POST" action="{{ url_for('resolver_alerta', id_alerta=alerta.id_alerta) }}" style="display:inline;">
-                    <button type="submit" class="btn btn-sm" style="background:#159447;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Resolver</button>
+                    <button type="submit" class="btn btn-sm" style="background:#22C55E;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Resolver</button>
                 </form>
                 <form method="POST" action="{{ url_for('marcar_falsa_alerta', id_alerta=alerta.id_alerta) }}" style="display:inline;">
-                    <button type="submit" class="btn btn-sm" style="background:#6b7280;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Falsa</button>
+                    <button type="submit" class="btn btn-sm" style="background:#64748B;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Falsa</button>
                 </form>
             </div>
             {% endif %}

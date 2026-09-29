@@ -4,202 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ForestView | {% block title %}Dashboard{% endblock %}</title>
+    <title>PhyroSense | {% block title %}Dashboard{% endblock %}</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-
-    <!-- ForestGuard CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo_phyrosense.svg') }}">
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        /* =========================================================
-           OCULTAR SCROLLBAR DEL SIDEBAR (sin perder funcionalidad)
-        ========================================================= */
-        .sidebar,
-        .sidebar-menu,
-        .sidebar-bottom {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .sidebar::-webkit-scrollbar,
-        .sidebar-menu::-webkit-scrollbar,
-        .sidebar-bottom::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Asegurar que el scroll siga funcionando (oculto) */
-        .sidebar-menu {
-            overflow-y: auto;
-        }
-
-        /* Modal de notificaciones */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-        }
-        .modal-content {
-            background: #ffffff;
-            margin: 80px auto;
-            padding: 0;
-            border-radius: 14px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            animation: modalFade 0.3s;
-        }
-        @keyframes modalFade {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid #e5ebe7;
-        }
-        .modal-header h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #17221b;
-        }
-        .close-modal {
-            font-size: 24px;
-            font-weight: 300;
-            cursor: pointer;
-            color: #718078;
-        }
-        .close-modal:hover {
-            color: #17221b;
-        }
-        .modal-body {
-            padding: 16px 20px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .notificacion-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #e5ebe7;
-        }
-        .notificacion-item:last-child {
-            border-bottom: none;
-        }
-        .notificacion-item i {
-            width: 30px;
-            text-align: center;
-            font-size: 18px;
-            color: #718078;
-        }
-        .notificacion-item.alerta i { color: #dc3d3d; }
-        .notificacion-item.riesgo_alto i { color: #e5a500; }
-        .notificacion-item.riesgo_moderado i { color: #f39c12; }
-        .notificacion-item div {
-            flex: 1;
-        }
-        .notificacion-item strong {
-            display: block;
-            font-size: 12px;
-        }
-        .notificacion-item span {
-            display: block;
-            font-size: 10px;
-            color: #718078;
-        }
-        .notificacion-item small {
-            font-size: 9px;
-            color: #9aa69f;
-        }
-        .notificacion-item .estado-pill {
-            font-size: 8px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            background: #eaf8ef;
-            color: #159447;
-        }
-        .notificacion-item .estado-pill.alerta {
-            background: #fff0f0;
-            color: #dc3d3d;
-        }
-        .notificacion-item .estado-pill.riesgo_alto {
-            background: #fff7df;
-            color: #e5a500;
-        }
-        .notificacion-item .estado-pill.riesgo_moderado {
-            background: #fef9e7;
-            color: #d97706;
-        }
-        .empty-notifications {
-            color: #718078;
-            text-align: center;
-            padding: 20px 0;
-        }
-    </style>
 </head>
 
 <body>
-
     <div class="dashboard">
 
         <!-- ==================== SIDEBAR ==================== -->
         <aside class="sidebar" id="sidebar">
-            <!-- LOGO -->
             <div class="sidebar-logo">
-                <div class="logo-icon" style="border-radius: 50%; overflow: hidden;">
-                    <img src="{{ url_for('static', filename='img/logo_forestguard.png') }}" alt="ForestGuard">
+                <div class="logo-icon">
+                    <img src="{{ url_for('static', filename='img/logo_phyrosense.svg') }}" alt="PhyroSense">
                 </div>
                 <div>
-                    <h2>ForestGuard</h2>
-                    <span>MONITORING SYSTEM</span>
+                    <h2>PhyroSense</h2>
+                    <span>SMART MONITORING</span>
                 </div>
             </div>
 
-            <!-- MENÚ -->
             <nav class="sidebar-menu">
                 <p class="menu-title">PRINCIPAL</p>
 
                 <a href="{{ url_for('dashboard') }}"
                     class="menu-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Dashboard</span>
+                    <i class="fa-solid fa-gauge-high"></i><span>Panel</span>
                 </a>
 
                 <a href="{{ url_for('zonas') }}"
                     class="menu-item {% if request.endpoint == 'zonas' %}active{% endif %}">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span>Zonas</span>
+                    <i class="fa-solid fa-map-location-dot"></i><span>Mapa</span>
                 </a>
 
                 <a href="{{ url_for('alertas') }}"
                     class="menu-item {% if request.endpoint == 'alertas' %}active{% endif %}">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <span>Alertas</span>
+                    <i class="fa-solid fa-triangle-exclamation"></i><span>Alertas</span>
                     {% if alertas_activas_count > 0 %}
                     <span class="notification-count" id="sidebarAlertCount">{{ alertas_activas_count }}</span>
                     {% endif %}
@@ -209,70 +59,55 @@
 
                 <a href="{{ url_for('sensores') }}"
                     class="menu-item {% if request.endpoint == 'sensores' %}active{% endif %}">
-                    <i class="fa-solid fa-microchip"></i>
-                    <span>Sensores</span>
+                    <i class="fa-solid fa-microchip"></i><span>Sensores</span>
                 </a>
 
                 <a href="{{ url_for('historial') }}"
                     class="menu-item {% if request.endpoint == 'historial' %}active{% endif %}">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Historial</span>
+                    <i class="fa-solid fa-clock-rotate-left"></i><span>Historial</span>
                 </a>
 
                 <p class="menu-title">SISTEMA</p>
 
-                <!-- Configuración visible para TODOS los usuarios autenticados -->
                 <a href="{{ url_for('configuracion') }}"
                     class="menu-item {% if request.endpoint == 'configuracion' %}active{% endif %}">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Configuración</span>
+                    <i class="fa-solid fa-gear"></i><span>Configuración</span>
                 </a>
 
                 {% if session.tipo == 'ADMINISTRADOR' %}
                 <a href="{{ url_for('usuarios') }}"
                     class="menu-item {% if request.endpoint == 'usuarios' %}active{% endif %}">
-                    <i class="fa-solid fa-users"></i>
-                    <span>Usuarios</span>
+                    <i class="fa-solid fa-users"></i><span>Usuarios</span>
                 </a>
 
                 <a href="{{ url_for('listar_estaciones') }}"
                     class="menu-item {% if request.endpoint == 'listar_estaciones' %}active{% endif %}">
-                    <i class="fa-solid fa-tower-broadcast"></i>
-                    <span>Estaciones</span>
+                    <i class="fa-solid fa-tower-broadcast"></i><span>Dispositivos</span>
                 </a>
 
                 <a href="{{ url_for('pendientes') }}"
                     class="menu-item {% if request.endpoint == 'pendientes' %}active{% endif %}">
-                    <i class="fa-solid fa-clock"></i>
-                    <span>Pendientes</span>
+                    <i class="fa-solid fa-clock"></i><span>Pendientes</span>
                     {% if pendientes_count and pendientes_count > 0 %}
                     <span class="notification-count">{{ pendientes_count }}</span>
                     {% endif %}
                 </a>
                 {% endif %}
 
-                <p class="menu-title">VIDEO</p>
-
-                <a href="{{ url_for('media') }}"
-                    class="menu-item {% if request.endpoint == 'media' %}active{% endif %}">
-                    <i class="fa-solid fa-film"></i>
-                    <span>Media</span>
-                </a>
+                <p class="menu-title">AYUDA</p>
 
                 <a href="{{ url_for('ayuda') }}"
                     class="menu-item {% if request.endpoint == 'ayuda' %}active{% endif %}">
-                    <i class="fa-solid fa-circle-question"></i>
-                    <span>Ayuda</span>
+                    <i class="fa-solid fa-circle-question"></i><span>Ayuda</span>
                 </a>
             </nav>
 
-            <!-- SIDEBAR BOTTOM -->
             <div class="sidebar-bottom">
                 <div class="system-status">
                     <span class="status-dot"></span>
                     <div>
-                        <strong>Sistema online</strong>
-                        <small id="sidebarStatus">Cargando...</small>
+                        <strong>Sistema operativo</strong>
+                        <small id="sidebarStatus">En línea</small>
                     </div>
                 </div>
 
@@ -282,41 +117,35 @@
                         <strong>{{ session.usuario if session.usuario else 'Invitado' }}</strong>
                         <small>{{ session.tipo if session.tipo else 'OBSERVADOR' }}</small>
                     </div>
-                    <a href="{{ url_for('logout') }}" title="Cerrar sesión">
+                    <a href="{{ url_for('logout') }}" title="Cerrar sesión" aria-label="Cerrar sesión">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </a>
                 </div>
             </div>
         </aside>
 
-        <!-- OVERLAY (para cerrar menú en móvil) -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- ==================== MAIN CONTENT ==================== -->
         <main class="main-content">
-
-            <!-- TOPBAR -->
             <header class="topbar">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <!-- Botón hamburguesa -->
+                <div>
                     <button class="hamburger" id="menuToggle" aria-label="Abrir menú">
                         <i class="fas fa-bars"></i>
                     </button>
                     <div class="page-title">
                         <span>{% block category %}MONITOREO{% endblock %}</span>
-                        <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+                        <h1>{% block page_title %}Panel{% endblock %}</h1>
                     </div>
                 </div>
 
                 <div class="topbar-actions">
                     <div class="last-update">
                         <i class="fa-regular fa-clock"></i>
-                        <span>Última actualización:</span>
+                        <span>Actualizado:</span>
                         <strong id="lastUpdate">{{ now.strftime('%H:%M:%S') if now else '--:--' }}</strong>
                     </div>
 
-                    <!-- Botón campana -->
-                    <button class="icon-button" title="Notificaciones" id="notificationBell">
+                    <button class="icon-button" title="Notificaciones" id="notificationBell" aria-label="Ver notificaciones">
                         <i class="fa-regular fa-bell"></i>
                         {% if alertas_activas_count > 0 %}
                         <span class="alert-dot" id="alertDot"></span>
@@ -333,7 +162,6 @@
                 </div>
             </header>
 
-            <!-- CONTENT -->
             <section class="content">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -349,17 +177,14 @@
 
                 {% block content %}{% endblock %}
             </section>
-
         </main>
-
     </div>
 
-    <!-- Modal de notificaciones -->
     <div id="notificationModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fa-solid fa-bell"></i> Notificaciones</h3>
-                <span class="close-modal">&times;</span>
+                <span class="close-modal" role="button" aria-label="Cerrar">&times;</span>
             </div>
             <div class="modal-body" id="notificationList">
                 <p class="empty-notifications">Cargando alertas...</p>
@@ -367,30 +192,20 @@
         </div>
     </div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
-    <!-- ForestGuard JS -->
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
-    <!-- ========================================================= -->
-    <!--            SCRIPT DE NOTIFICACIONES Y ALERTAS             -->
-    <!-- ========================================================= -->
     <script>
         (function () {
             let notificadas = new Set();
             let ubicacionActiva = true;
-            let modalAbierto = false;
 
-            // Recuperar preferencia de ubicación de sessionStorage
             try {
                 const ubicacionPref = sessionStorage.getItem('ubicacion');
-                if (ubicacionPref !== null) {
-                    ubicacionActiva = ubicacionPref === 'true';
-                }
-            } catch (e) {}
+                if (ubicacionPref !== null) ubicacionActiva = ubicacionPref === 'true';
+            } catch (e) { }
 
-            window.setUbicacion = function(estado) {
+            window.setUbicacion = function (estado) {
                 ubicacionActiva = estado;
                 sessionStorage.setItem('ubicacion', estado);
             };
@@ -399,9 +214,7 @@
 
             function pedirPermisoNotificaciones() {
                 if (!('Notification' in window)) return;
-                if (Notification.permission === 'default') {
-                    Notification.requestPermission();
-                }
+                if (Notification.permission === 'default') Notification.requestPermission();
             }
 
             function enviarUbicacion() {
@@ -411,15 +224,10 @@
                         fetch('/api/set_location', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                lat: pos.coords.latitude,
-                                lon: pos.coords.longitude
-                            })
+                            body: JSON.stringify({ lat: pos.coords.latitude, lon: pos.coords.longitude })
                         }).catch(e => console.warn('Error al enviar ubicación', e));
                     },
-                    function (err) {
-                        console.warn('Geolocalización no disponible', err.message);
-                    },
+                    function (err) { console.warn('Geolocalización no disponible', err.message); },
                     { enableHighAccuracy: true, timeout: 5000, maximumAge: 60000 }
                 );
             }
@@ -432,20 +240,14 @@
                     osc.type = 'square';
                     osc.frequency.value = 800;
                     gain.gain.value = 0.3;
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
+                    osc.connect(gain); gain.connect(ctx.destination);
                     osc.start();
-                    setTimeout(() => {
-                        osc.stop();
-                        ctx.close();
-                    }, 500);
-                } catch (e) {}
+                    setTimeout(() => { osc.stop(); ctx.close(); }, 500);
+                } catch (e) { }
             }
 
             function vibrarDispositivo() {
-                if (navigator.vibrate) {
-                    navigator.vibrate([200, 100, 200, 100, 500]);
-                }
+                if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]);
             }
 
             function mostrarNotificacion(titulo, cuerpo, idAlerta) {
@@ -455,7 +257,7 @@
                 }
                 const notif = new Notification(titulo, {
                     body: cuerpo,
-                    icon: '/static/img/logo_forestguard.png',
+                    icon: '/static/img/logo_phyrosense.svg',
                     tag: `alerta-${idAlerta}`,
                     requireInteraction: true
                 });
@@ -475,193 +277,117 @@
                     } else {
                         let html = '';
                         alertas.forEach(a => {
-                            const icono = a.nivel === 'ALERTA' ? 'fa-fire' :
-                                         (a.nivel === 'RIESGO_ALTO' ? 'fa-temperature-high' : 'fa-circle-exclamation');
+                            const icono = a.nivel === 'ALERTA' ? 'fa-triangle-exclamation' :
+                                (a.nivel === 'RIESGO_ALTO' ? 'fa-fire-flame-curved' : 'fa-circle-exclamation');
                             const nivelClass = a.nivel.toLowerCase().replace('_', '');
                             html += `
                                 <div class="notificacion-item ${nivelClass}">
                                     <i class="fa-solid ${icono}"></i>
                                     <div>
                                         <strong>${a.titulo || 'Alerta'}</strong>
-                                        <span>${a.estacion || 'Estación desconocida'}${a.distancia_km !== null ? ' - '+a.distancia_km.toFixed(1)+' km' : ''}</span>
+                                        <span>${a.estacion || 'Dispositivo desconocido'}${a.distancia_km !== null ? ' - ' + a.distancia_km.toFixed(1) + ' km' : ''}</span>
                                         <small>${a.fecha_creacion ? new Date(a.fecha_creacion).toLocaleString() : ''}</small>
                                     </div>
                                     <span class="estado-pill ${nivelClass}">${a.nivel || 'NORMAL'}</span>
-                                </div>
-                            `;
+                                </div>`;
                         });
                         lista.innerHTML = html;
                     }
                 }
 
-                // Notificaciones del navegador
                 if (alertas && alertas.length > 0) {
                     alertas.forEach(alerta => {
                         const id = alerta.id_alerta;
                         if (notificadas.has(id)) return;
-
                         const esCritica = (alerta.nivel === 'ALERTA');
                         const cerca = alerta.cerca === true;
                         const activarAlarma = esCritica && cerca;
+                        let mensaje = `${alerta.estacion || 'Dispositivo'}: ${alerta.descripcion || 'Alerta activa'}`;
+                        if (alerta.distancia_km !== null) mensaje += ` (${alerta.distancia_km.toFixed(1)} km)`;
+                        if (activarAlarma) mensaje += ' 🚨 ¡ALERTA CRÍTICA CERCA!';
 
-                        let mensaje = `${alerta.estacion || 'Estación'}: ${alerta.descripcion || 'Alerta activa'}`;
-                        if (alerta.distancia_km !== null) {
-                            mensaje += ` (${alerta.distancia_km.toFixed(1)} km)`;
-                        }
-                        if (activarAlarma) {
-                            mensaje += ' 🚨 ¡ALERTA CRÍTICA CERCA!';
-                        }
-
-                        mostrarNotificacion(
-                            `ForestGuard - ${alerta.nivel}`,
-                            mensaje,
-                            id
-                        );
-
-                        if (activarAlarma) {
-                            vibrarDispositivo();
-                            reproducirAlarma();
-                        }
-
+                        mostrarNotificacion(`PhyroSense - ${alerta.nivel}`, mensaje, id);
+                        if (activarAlarma) { vibrarDispositivo(); reproducirAlarma(); }
                         notificadas.add(id);
                     });
                 }
 
-                // Actualizar contador en sidebar
                 const count = (alertas && alertas.length) || 0;
                 const sidebarCount = document.querySelector('.menu-item[href="/alertas"] .notification-count');
                 if (sidebarCount) {
-                    if (count > 0) {
-                        sidebarCount.textContent = count;
-                        sidebarCount.style.display = 'flex';
-                    } else {
-                        sidebarCount.style.display = 'none';
-                    }
+                    if (count > 0) { sidebarCount.textContent = count; sidebarCount.style.display = 'inline-flex'; }
+                    else { sidebarCount.style.display = 'none'; }
                 }
-                // Actualizar punto de la campana
                 const dot = document.getElementById('alertDot');
-                if (dot) {
-                    dot.style.display = count > 0 ? 'block' : 'none';
-                }
+                if (dot) dot.style.display = count > 0 ? 'block' : 'none';
             }
 
             function fetchAlertas() {
                 fetch('/api/alertas_activas')
-                    .then(res => {
-                        if (!res.ok) throw new Error('Error en API');
-                        return res.json();
-                    })
-                    .then(data => {
-                        procesarAlertas(data);
-                    })
+                    .then(res => { if (!res.ok) throw new Error('Error en API'); return res.json(); })
+                    .then(data => procesarAlertas(data))
                     .catch(err => console.warn('Error al obtener alertas', err));
             }
 
             function init() {
                 pedirPermisoNotificaciones();
-                if (ubicacionActiva) {
-                    enviarUbicacion();
-                }
-
-                // Cargar alertas iniciales
+                if (ubicacionActiva) enviarUbicacion();
                 fetchAlertas();
-
-                // Actualización periódica
                 setInterval(fetchAlertas, INTERVALO);
 
-                // Modal de notificaciones
                 const bell = document.getElementById('notificationBell');
                 const modal = document.getElementById('notificationModal');
                 const closeBtn = document.querySelector('.close-modal');
 
                 if (bell && modal) {
-                    bell.addEventListener('click', function(e) {
+                    bell.addEventListener('click', function (e) {
                         e.stopPropagation();
+                        modal.classList.add('open');
                         modal.style.display = 'block';
-                        modalAbierto = true;
-                        fetchAlertas(); // refrescar al abrir
+                        fetchAlertas();
                     });
-                    if (closeBtn) {
-                        closeBtn.addEventListener('click', function() {
-                            modal.style.display = 'none';
-                            modalAbierto = false;
-                        });
+                    function cerrarModal() {
+                        modal.classList.remove('open');
+                        modal.style.display = 'none';
                     }
-                    window.addEventListener('click', function(e) {
-                        if (e.target === modal) {
-                            modal.style.display = 'none';
-                            modalAbierto = false;
-                        }
+                    if (closeBtn) closeBtn.addEventListener('click', cerrarModal);
+                    window.addEventListener('click', function (e) {
+                        if (e.target === modal) cerrarModal();
                     });
                 }
-
-                // Estado del sistema
-                const statusDot = document.querySelector('.status-dot');
-                if (statusDot) {
-                    statusDot.style.background = '#32d766';
-                }
             }
 
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+            else init();
         })();
     </script>
 
-    <!-- ========================================================= -->
-    <!--            SCRIPT PARA MENÚ HAMBURGUESA                   -->
-    <!-- ========================================================= -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const toggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
 
-            function openMenu() {
-                sidebar.classList.add('open');
-                overlay.classList.add('active');
-            }
-
-            function closeMenu() {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-            }
+            function openMenu() { sidebar.classList.add('open'); overlay.classList.add('active'); }
+            function closeMenu() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
 
             if (toggle) {
-                toggle.addEventListener('click', function(e) {
+                toggle.addEventListener('click', function (e) {
                     e.stopPropagation();
-                    if (sidebar.classList.contains('open')) {
-                        closeMenu();
-                    } else {
-                        openMenu();
-                    }
+                    sidebar.classList.contains('open') ? closeMenu() : openMenu();
                 });
             }
+            if (overlay) overlay.addEventListener('click', closeMenu);
+            document.querySelectorAll('.menu-item').forEach(item => item.addEventListener('click', closeMenu));
 
-            if (overlay) {
-                overlay.addEventListener('click', closeMenu);
-            }
-
-            // Cerrar al hacer clic en un enlace del menú
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', closeMenu);
-            });
-
-            // En escritorio, asegurar que el sidebar se muestre
             function handleResize() {
-                if (window.innerWidth >= 768) {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('active');
-                }
+                if (window.innerWidth >= 768) { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
             }
             window.addEventListener('resize', handleResize);
         });
     </script>
 
     {% block extra_scripts %}{% endblock %}
-
 </body>
 
 </html>

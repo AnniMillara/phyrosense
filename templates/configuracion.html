@@ -31,7 +31,7 @@
             <label class="toggle-setting">
                 <div>
                     <strong>Actualización automática</strong>
-                    <small>Actualizar datos automáticamente en el dashboard</small>
+                    <small>Actualizar datos automáticamente en el panel</small>
                 </div>
                 <input type="checkbox" name="auto_update" {% if config.auto_update %}checked{% endif %}>
                 <span class="toggle"></span>
@@ -44,7 +44,7 @@
                 <input type="checkbox" name="ubicacion" {% if config.ubicacion %}checked{% endif %}>
                 <span class="toggle"></span>
             </label>
-            <button type="submit" class="btn" style="margin-top:16px;">
+            <button type="submit" class="btn" style="margin-top:20px;">
                 <i class="fas fa-save"></i> Guardar preferencias
             </button>
         </form>
@@ -57,20 +57,20 @@
                 <h3>Tu cuenta</h3>
             </div>
         </div>
-        <div style="padding:10px 0; border-bottom:1px solid var(--border);">
-            <strong style="display:block; font-size:12px;">Usuario</strong>
-            <span style="font-size:11px; color:var(--text-gray);">{{ session.usuario }}</span>
+        <div style="padding:14px 0; border-bottom:1px solid var(--border);">
+            <strong style="display:block; font-size:0.8125rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Usuario</strong>
+            <span style="font-size:1rem; color:var(--text);">{{ session.usuario }}</span>
         </div>
-        <div style="padding:10px 0; border-bottom:1px solid var(--border);">
-            <strong style="display:block; font-size:12px;">Rol</strong>
-            <span style="font-size:11px; color:var(--text-gray);">{{ session.tipo }}</span>
+        <div style="padding:14px 0; border-bottom:1px solid var(--border);">
+            <strong style="display:block; font-size:0.8125rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Rol</strong>
+            <span style="font-size:1rem; color:var(--text);">{{ session.tipo }}</span>
         </div>
-        <div style="padding:10px 0;">
-            <strong style="display:block; font-size:12px;">Nombre completo</strong>
-            <span style="font-size:11px; color:var(--text-gray);">{{ session.nombre_completo }}</span>
+        <div style="padding:14px 0;">
+            <strong style="display:block; font-size:0.8125rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Nombre completo</strong>
+            <span style="font-size:1rem; color:var(--text);">{{ session.nombre_completo }}</span>
         </div>
-        <div style="margin-top:12px; padding:12px; background:#fef9e7; border-radius:8px; font-size:9px; color:#7d6b00;">
-            <i class="fas fa-info-circle"></i> 
+        <div style="margin-top:16px; padding:14px; background:var(--warning-bg); border-radius:10px; font-size:0.875rem; color:#854D0E; line-height:1.5;">
+            <i class="fas fa-info-circle"></i>
             Las preferencias se guardan en tu cuenta y se mantienen entre sesiones.
         </div>
     </div>

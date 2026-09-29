@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if estacion else 'Nueva' }} estación{% endblock %}
-{% block page_title %}{{ 'Editar' if estacion else 'Nueva' }} estación{% endblock %}
+{% block title %}{{ 'Editar' if estacion else 'Nuevo' }} dispositivo{% endblock %}
+{% block page_title %}{{ 'Editar' if estacion else 'Nuevo' }} dispositivo{% endblock %}
 {% block content %}
 <form method="POST" class="panel">
     <div class="form-grid">
@@ -10,7 +10,7 @@
         <div>
             <label>API Key</label>
             <input type="text" name="api_key" value="{{ estacion.api_key if estacion else '' }}">
-            <small style="color:#718078;font-size:8px;">Cambia solo si es necesario.</small>
+            <small style="color:#64748B;font-size:9px;">Cambia solo si es necesario.</small>
         </div>
         {% endif %}
         <div><label>Zona</label>
@@ -26,7 +26,7 @@
         <div><label>Descripción</label><textarea name="descripcion" rows="2">{{ estacion.descripcion if estacion else '' }}</textarea></div>
         {% if estacion %}
         <div style="display:flex;align-items:center;gap:10px;">
-            <label for="activa" style="margin:0;">Estación activa</label>
+            <label for="activa" style="margin:0;">Dispositivo activo</label>
             <input type="checkbox" id="activa" name="activa" {% if estacion.activa %}checked{% endif %}>
         </div>
         {% endif %}

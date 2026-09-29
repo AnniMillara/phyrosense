@@ -14,7 +14,9 @@
             <div>
                 <label>Nombre de usuario *</label>
                 <input type="text" name="nombre_usuario" value="{{ usuario.nombre_usuario if usuario else '' }}" {% if usuario %}readonly{% endif %} required>
-                <small style="color:#718078;font-size:8px;">{% if usuario %}No se puede cambiar el nombre de usuario.{% endif %}</small>
+                {% if usuario %}
+                <small>No se puede cambiar el nombre de usuario.</small>
+                {% endif %}
             </div>
             <div>
                 <label>Email *</label>
@@ -39,7 +41,7 @@
                 <input type="password" name="contrasena" placeholder="{% if usuario %}Nueva contraseña{% else %}Mínimo 6 caracteres{% endif %}" {% if not usuario %}required{% endif %}>
             </div>
         </div>
-        <div style="margin-top:20px; display:flex; gap:10px;">
+        <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
             <button type="submit" class="btn"><i class="fas fa-save"></i> Guardar</button>
             <a href="{{ url_for('usuarios') }}" class="btn btn-outline">Cancelar</a>
         </div>

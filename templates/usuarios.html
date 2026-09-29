@@ -6,7 +6,7 @@
 <div class="page-heading">
     <span>ADMINISTRACIÓN</span>
     <h2>Usuarios del sistema</h2>
-    <p>Administra los perfiles y roles de los usuarios ForestGuard.</p>
+    <p>Administra los perfiles y roles de los usuarios de PhyroSense.</p>
 </div>
 
 <div class="panel">
@@ -48,14 +48,17 @@
                     </td>
                     <td data-label="Último acceso">{{ u.ultimo_acceso or 'Nunca' }}</td>
                     <td data-label="Acciones" class="acciones">
-                        <a href="{{ url_for('editar_usuario', id_usuario=u.id_usuario) }}" class="btn btn-sm"><i class="fas fa-pen"></i></a>
+                        <a href="{{ url_for('editar_usuario', id_usuario=u.id_usuario) }}" class="btn btn-sm"><i
+                                class="fas fa-pen"></i></a>
                         {% if u.estado == 'ACTIVO' %}
-                        <form method="POST" action="{{ url_for('cambiar_estado_usuario', id_usuario=u.id_usuario) }}" style="display:inline;">
+                        <form method="POST" action="{{ url_for('cambiar_estado_usuario', id_usuario=u.id_usuario) }}"
+                            style="display:inline;">
                             <input type="hidden" name="estado" value="BLOQUEADO">
                             <button class="btn btn-sm btn-outline" title="Bloquear"><i class="fas fa-lock"></i></button>
                         </form>
                         {% else %}
-                        <form method="POST" action="{{ url_for('cambiar_estado_usuario', id_usuario=u.id_usuario) }}" style="display:inline;">
+                        <form method="POST" action="{{ url_for('cambiar_estado_usuario', id_usuario=u.id_usuario) }}"
+                            style="display:inline;">
                             <input type="hidden" name="estado" value="ACTIVO">
                             <button class="btn btn-sm" title="Activar"><i class="fas fa-unlock"></i></button>
                         </form>
@@ -63,7 +66,9 @@
                     </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="7" class="empty-state">No hay usuarios registrados.</td></tr>
+                <tr>
+                    <td colspan="7" class="empty-state">No hay usuarios registrados.</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>

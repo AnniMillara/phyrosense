@@ -1,5 +1,5 @@
 """
-ForestGuard - Sistema de monitoreo ambiental
+PhyroSense - Sistema de monitoreo y prevención temprana
 Flujo: ESP32 → API Flask → MySQL → Dashboard
 """
 from functools import wraps
@@ -96,19 +96,19 @@ def init_db():
                 (admin['id_usuario'],)
             )
             print("✅ Estado de admin activado")
+    # ADMIN
     else:
         hash_pass = generate_password_hash('admin123')
         db.execute_query("""
             INSERT INTO usuarios (nombre_usuario, contrasena_hash, email, nombre_completo, id_tipo_usuario)
             VALUES (%s, %s, %s, %s, %s)
-        """, ('admin', hash_pass, 'admin@forestguard.com', 'Administrador', 1))
+        """, ('admin', hash_pass, 'admin@phyrosense.com', 'Administrador', 1))
         print("✅ Usuario admin creado (admin / admin123)")
-
-    # ---------- USUARIOS DE PRUEBA ----------
+    # USUARIOS DE PRUEBA
     prueba = [
-        ('bombero', 'bombero123', 'bombero@forestguard.com', 'Bombero Test', 2),
-        ('operador', 'operador123', 'operador@forestguard.com', 'Operador Test', 3),
-        ('observador', 'observador123', 'observador@forestguard.com', 'Observador Test', 4)
+        ('bombero', 'bombero123', 'bombero@phyrosense.com', 'Bombero Test', 2),
+        ('operador', 'operador123', 'operador@phyrosense.com', 'Operador Test', 3),
+        ('observador', 'observador123', 'observador@phyrosense.com', 'Observador Test', 4)
     ]
     for user, pwd, email, nombre, tipo in prueba:
         usuario = db.get_one(
@@ -1352,26 +1352,26 @@ def api_recibir_datos(codigo):
             db.execute_query("""
                 INSERT INTO estaciones (nombre, codigo, api_key, id_zona, latitud, longitud, descripcion, activa, id_estado_estacion)
                 VALUES (%s, %s, %s, NULL, %s, %s, %s, 0, %s)
-            """, (f"Auto-{codigo}", codigo, data['api_key'], DEFAULT_LAT, DEFAULT_LON,
-                  "Estación registrada automáticamente - pendiente de aprobación", ESTADO_ESTACION['PENDIENTE']))
+            """, (f"PhyroSense-{codigo}", codigo, data['api_key'], DEFAULT_LAT, DEFAULT_LON,
+                  "Dispositivo PhyroSense registrado automáticamente - pendiente de aprobación", ESTADO_ESTACION['PENDIENTE']))
             estacion = db.get_one("SELECT * FROM estaciones WHERE codigo = %s", (codigo,))
             if not estacion:
-                return jsonify({'error': 'No se pudo recuperar la estación registrada'}), 500
-            print(f"✅ Estación registrada automáticamente (pendiente): {codigo}")
+                return jsonify({'error': 'No se pudo recuperar el dispositivo registrado'}), 500
+            print(f"✅ Dispositivo PhyroSense registrado automáticamente (pendiente): {codigo}")
             registrar_evento('CONFIGURACION_CAMBIADA', id_estacion=estacion['id_estacion'],
-                            mensaje=f"Estación auto-registrada {codigo} (pendiente)")
+                            mensaje=f"Dispositivo auto-registrado {codigo} (pendiente)")
         except Exception as e:
-            print(f"❌ Error al registrar estación automáticamente: {e}")
-            return jsonify({'error': f'Error al registrar estación: {str(e)}'}), 500
+            print(f"❌ Error al registrar dispositivo automáticamente: {e}")
+            return jsonify({'error': f'Error al registrar dispositivo: {str(e)}'}), 500
 
     if not estacion:
-        return jsonify({'error': 'Estación no registrada'}), 404
+        return jsonify({'error': 'Dispositivo no registrado'}), 404
 
     if estacion['api_key'] != data['api_key']:
         return jsonify({'error': 'api_key inválida'}), 401
 
     if not estacion['activa']:
-        return jsonify({'error': 'Estación pendiente de aprobación. Contacte al administrador.'}), 403
+        return jsonify({'error': 'Dispositivo pendiente de aprobación. Contacte al administrador.'}), 403
 
     id_estacion = estacion['id_estacion']
     temperatura = data.get('temperatura')
@@ -1387,7 +1387,7 @@ def api_recibir_datos(codigo):
     if dht_ok_enviado is not None:
         dht_ok = bool(dht_ok_enviado)
     else:
-        # Si no viene, asumimos que es OK si temperatura y humedad son valores válidos (no None y no 0)
+        # Si no viene, asumimos OK si temperatura y humedad son valores válidos (no None y no 0)
         dht_ok = (temperatura is not None and humedad is not None and temperatura != 0 and humedad != 0)
 
     # --- Determinar mq2_ok ---
@@ -1399,7 +1399,7 @@ def api_recibir_datos(codigo):
 
     umbrales = obtener_umbrales(id_estacion)
 
-    # Clasificar humo
+    # Clasificar humo / gases
     id_tipo_humo = None
     if nivel_humo_enviado is not None:
         id_tipo_humo = mapear_nivel_humo_a_id(nivel_humo_enviado)
@@ -1412,6 +1412,9 @@ def api_recibir_datos(codigo):
             cambio_ao = int(float(cambio_ao))
         except:
             cambio_ao = 0
+
+    # Inicializar nivel_humo_num por defecto (evita UnboundLocalError en la respuesta)
+    nivel_humo_num = 0
 
     # Insertar medición
     id_medicion = db.execute_query("""
@@ -1440,7 +1443,7 @@ def api_recibir_datos(codigo):
 
     hubo_error_sensor = not dht_ok or not mq2_ok
 
-    # Actualizar conexión y estado de la estación
+    # Actualizar conexión y estado del dispositivo
     db.execute_query("""
         UPDATE estaciones 
         SET ultima_conexion = NOW(), 
@@ -1452,7 +1455,8 @@ def api_recibir_datos(codigo):
     if hubo_error_sensor:
         crear_o_actualizar_alerta(
             id_estacion, 'SENSOR_ERROR', 'RIESGO_MODERADO',
-            'Error de sensor', f"DHT22 {'OK' if dht_ok else 'ERROR'}, MQ-2 {'OK' if mq2_ok else 'ERROR'}",
+            'Sensor con lecturas anómalas',
+            f"Se detectaron problemas en los sensores: DHT22 {'OK' if dht_ok else 'ERROR'}, MQ-2 {'OK' if mq2_ok else 'ERROR'}.",
             id_medicion=id_medicion
         )
     else:
@@ -1471,14 +1475,14 @@ def api_recibir_datos(codigo):
     """, (ESTADO_ALERTA['RESUELTA'], id_estacion, ESTADO_ALERTA['ACTIVA']))
 
     if estacion.get('id_estado_estacion') in [ESTADO_ESTACION['OFFLINE'], ESTADO_ESTACION['SIN_DATOS']]:
-        registrar_evento('ESTACION_CONECTADA', id_estacion=id_estacion, mensaje='Estación ONLINE')
+        registrar_evento('ESTACION_CONECTADA', id_estacion=id_estacion, mensaje='Dispositivo ONLINE')
 
     # Evaluar riesgo
     respuesta_riesgo = 'SIN_EVALUAR'
     if not hubo_error_sensor:
         if id_tipo_humo:
-            nivel_humo_num = db.get_one("SELECT nivel FROM tipos_humo WHERE id_tipo_humo = %s", (id_tipo_humo,))
-            nivel_humo_num = nivel_humo_num['nivel'] if nivel_humo_num else 0
+            nivel_humo_row = db.get_one("SELECT nivel FROM tipos_humo WHERE id_tipo_humo = %s", (id_tipo_humo,))
+            nivel_humo_num = nivel_humo_row['nivel'] if nivel_humo_row else 0
         else:
             nivel_humo_num = 0
 
@@ -1491,14 +1495,14 @@ def api_recibir_datos(codigo):
         )
         if tipo_alerta:
             titulos = {
-                'POSIBLE_INCENDIO': 'Posible incendio - verificar',
+                'POSIBLE_INCENDIO': 'Situación de riesgo detectada',
                 'RIESGO_ALTO': 'Riesgo alto detectado',
                 'RIESGO_MODERADO': 'Riesgo moderado detectado'
             }
             descripciones = {
-                'POSIBLE_INCENDIO': 'Condiciones compatibles con incendio. Requiere verificación.',
-                'RIESGO_ALTO': 'Combinación de variables eleva el riesgo.',
-                'RIESGO_MODERADO': 'Una variable fuera de rango normal.'
+                'POSIBLE_INCENDIO': 'Se detectaron simultáneamente condiciones de riesgo elevado (temperatura, humedad, humo o gases). Requiere verificación inmediata.',
+                'RIESGO_ALTO': 'La combinación de variables ambientales eleva el nivel de riesgo en el espacio monitoreado.',
+                'RIESGO_MODERADO': 'Una de las variables monitoreadas se encuentra fuera de rango normal.'
             }
             crear_o_actualizar_alerta(
                 id_estacion, tipo_alerta, nivel_riesgo,

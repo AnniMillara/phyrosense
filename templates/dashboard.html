@@ -6,26 +6,23 @@
 
 {% block content %}
 
-<!-- BIENVENIDA -->
 <div class="welcome">
     <div>
-        <h2>Monitoreo forestal</h2>
-        <p>Supervisa las condiciones ambientales y detecta posibles riesgos en tiempo real.</p>
+        <h2>Monitoreo de espacios</h2>
+        <p>Detectar antes. Reaccionar a tiempo. Supervisa temperatura, humedad, humo y gases en tiempo real.</p>
     </div>
-    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-        <!-- Estado del sistema -->
-        <div class="system-online" style="margin:0; padding: 8px 14px;">
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <div class="system-online" style="margin:0; padding:8px 14px;">
             <span></span>
             <div>
                 <strong>Sistema operativo</strong>
-                <small id="sensorConnectionStatus">{{ online }}/{{ total }} estaciones conectadas</small>
+                <small id="sensorConnectionStatus">{{ online }}/{{ total }} dispositivos conectados</small>
             </div>
         </div>
-        <!-- Selector de estaciones -->
-        <div style="display: flex; align-items: center; gap: 8px; background: white; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border);">
-            <i class="fa-solid fa-filter" style="color: var(--text-gray); font-size: 12px;"></i>
-            <select id="stationSelector" style="border: none; background: transparent; font-size: 12px; font-weight: 500; padding: 6px 4px; outline: none; color: var(--text-dark); min-width: 140px;">
-                <option value="">Todas las estaciones</option>
+        <div style="display:flex; align-items:center; gap:8px; background:#fff; padding:4px 12px; border-radius:20px; border:1px solid var(--border);">
+            <i class="fa-solid fa-filter" style="color:var(--text-gray); font-size:12px;"></i>
+            <select id="stationSelector" style="border:none; background:transparent; font-size:12px; font-weight:500; padding:6px 4px; outline:none; color:var(--text-dark); min-width:140px;">
+                <option value="">Todos los dispositivos</option>
                 {% for est in estaciones_selector %}
                     <option value="{{ est.id_estacion }}" {% if estacion_seleccionada == est.id_estacion %}selected{% endif %}>
                         {{ est.nombre }}
@@ -36,14 +33,11 @@
     </div>
 </div>
 
-<!-- ESTADÍSTICAS -->
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-header">
             <span class="stat-title">Temperatura</span>
-            <div class="stat-icon temperature">
-                <i class="fa-solid fa-temperature-half"></i>
-            </div>
+            <div class="stat-icon temperature"><i class="fa-solid fa-temperature-half"></i></div>
         </div>
         <div class="stat-value">
             <strong id="temperature">{{ ultima_medicion.temperatura if ultima_medicion and ultima_medicion.temperatura is not none else '--' }}</strong>
@@ -53,18 +47,14 @@
             <i class="fa-solid fa-arrow-{{ 'up' if ultima_medicion and ultima_medicion.temperatura and ultima_medicion.temperatura > 25 else 'down' }}"></i>
             {% if ultima_medicion and ultima_medicion.temperatura is not none %}
                 {{ ((ultima_medicion.temperatura - 25) / 25 * 100)|round(1) }}% respecto al promedio
-            {% else %}
-                Sin datos
-            {% endif %}
+            {% else %}Sin datos{% endif %}
         </div>
     </div>
 
     <div class="stat-card">
         <div class="stat-header">
             <span class="stat-title">Humedad</span>
-            <div class="stat-icon humidity">
-                <i class="fa-solid fa-droplet"></i>
-            </div>
+            <div class="stat-icon humidity"><i class="fa-solid fa-droplet"></i></div>
         </div>
         <div class="stat-value">
             <strong id="humidity">{{ ultima_medicion.humedad if ultima_medicion and ultima_medicion.humedad is not none else '--' }}</strong>
@@ -74,18 +64,14 @@
             <i class="fa-solid fa-arrow-{{ 'up' if ultima_medicion and ultima_medicion.humedad and ultima_medicion.humedad > 50 else 'down' }}"></i>
             {% if ultima_medicion and ultima_medicion.humedad is not none %}
                 {{ ((ultima_medicion.humedad - 50) / 50 * 100)|round(1) }}% respecto al promedio
-            {% else %}
-                Sin datos
-            {% endif %}
+            {% else %}Sin datos{% endif %}
         </div>
     </div>
 
     <div class="stat-card">
         <div class="stat-header">
-            <span class="stat-title">Nivel de humo</span>
-            <div class="stat-icon smoke">
-                <i class="fa-solid fa-smog"></i>
-            </div>
+            <span class="stat-title">Humo / Gases</span>
+            <div class="stat-icon smoke"><i class="fa-solid fa-smog"></i></div>
         </div>
         <div class="stat-value">
             <strong id="smoke">{{ ultima_medicion.humo_nombre if ultima_medicion else '--' }}</strong>
@@ -93,7 +79,7 @@
         </div>
         <div class="stat-footer positive">
             <i class="fa-solid fa-check"></i>
-            {% if ultima_medicion and ultima_medicion.humo_nombre == 'NINGUNO' %}Nivel normal
+            {% if ultima_medicion and ultima_medicion.humo_nombre == 'NINGUNO' %}Sin detección
             {% elif ultima_medicion and ultima_medicion.humo_nombre == 'BAJO' %}Presencia leve
             {% elif ultima_medicion and ultima_medicion.humo_nombre == 'MEDIO' %}Presencia moderada
             {% elif ultima_medicion and ultima_medicion.humo_nombre == 'ALTO' %}⚠️ ¡Atención!
@@ -104,28 +90,25 @@
     <div class="stat-card">
         <div class="stat-header">
             <span class="stat-title">Nivel de riesgo</span>
-            <div class="stat-icon risk">
-                <i class="fa-solid fa-shield-halved"></i>
-            </div>
+            <div class="stat-icon risk"><i class="fa-solid fa-shield-halved"></i></div>
         </div>
         <div class="risk-value">
-            <span class="risk-indicator" style="background: {{ riesgo_actual.color_hex if riesgo_actual else '#159447' }}; box-shadow: 0 0 0 5px {{ riesgo_actual.color_hex + '22' if riesgo_actual else 'rgba(21,148,71,0.10)' }};"></span>
-            <strong id="risk" style="color: {{ riesgo_actual.color_hex if riesgo_actual else '#159447' }};">
+            <span class="risk-indicator" style="background:{{ riesgo_actual.color_hex if riesgo_actual else '#22C55E' }}; box-shadow: 0 0 0 5px {{ riesgo_actual.color_hex + '22' if riesgo_actual else 'rgba(34,197,94,0.10)' }};"></span>
+            <strong id="risk" style="color:{{ riesgo_actual.color_hex if riesgo_actual else '#22C55E' }};">
                 {{ riesgo_actual.nombre if riesgo_actual else 'NORMAL' }}
             </strong>
         </div>
         <div class="stat-footer">
             {% if riesgo_actual %}
                 {% if riesgo_actual.nombre == 'NORMAL' %}Todos los parámetros normales
-                {% elif riesgo_actual.nombre == 'RIESGO_MODERADO' %}⚠️ Precauciones
+                {% elif riesgo_actual.nombre == 'RIESGO_MODERADO' %}⚠️ Precaución
                 {% elif riesgo_actual.nombre == 'RIESGO_ALTO' %}⚠️ Riesgo alto
-                {% else %}🚨 ¡Emergencia!{% endif %}
+                {% else %}🚨 ¡Alerta activa!{% endif %}
             {% else %}Todos los parámetros normales{% endif %}
         </div>
     </div>
 </div>
 
-<!-- GRÁFICO + MAPA -->
 <div class="middle-grid">
     <div class="panel">
         <div class="panel-header">
@@ -151,7 +134,7 @@
         <div class="panel-header">
             <div>
                 <span class="panel-label">UBICACIÓN</span>
-                <h3>Zonas monitoreadas</h3>
+                <h3>Espacios monitoreados</h3>
             </div>
         </div>
         <div class="map-container">
@@ -160,7 +143,6 @@
     </div>
 </div>
 
-<!-- ALERTAS + DISPOSITIVOS -->
 <div class="bottom-grid">
     <div class="panel">
         <div class="panel-header">
@@ -174,7 +156,7 @@
             {% for alerta in alertas_activas[:3] %}
             <div class="alert-item {% if alerta.nivel == 'ALERTA' %}danger{% elif alerta.nivel == 'RIESGO_ALTO' %}warning{% else %}normal{% endif %}">
                 <div class="alert-icon">
-                    <i class="fa-solid fa-{% if alerta.nivel == 'ALERTA' %}triangle-exclamation{% elif alerta.nivel == 'RIESGO_ALTO' %}circle-exclamation{% else %}circle-check{% endif %}"></i>
+                    <i class="fa-solid fa-{% if alerta.nivel == 'ALERTA' %}triangle-exclamation{% elif alerta.nivel == 'RIESGO_ALTO' %}fire-flame-curved{% else %}circle-check{% endif %}"></i>
                 </div>
                 <div class="alert-info">
                     <strong>{{ alerta.titulo }}</strong>
@@ -214,7 +196,7 @@
                 </div>
             </div>
             {% else %}
-            <div class="device"><div class="device-info"><span>No hay estaciones registradas</span></div></div>
+            <div class="device"><div class="device-info"><span>No hay dispositivos registrados</span></div></div>
             {% endfor %}
         </div>
     </div>
@@ -226,34 +208,25 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const historico = {{ historico|tojson if historico else [] }};
-        if (typeof window.initializeChart === 'function') {
-            window.initializeChart(historico);
-        }
+        if (typeof window.initializeChart === 'function') window.initializeChart(historico);
 
-        // Selector de estaciones
         const stationSelector = document.getElementById('stationSelector');
         if (stationSelector) {
             stationSelector.addEventListener('change', function() {
                 const value = this.value;
                 const url = new URL(window.location.href);
-                if (value) {
-                    url.searchParams.set('estacion', value);
-                } else {
-                    url.searchParams.delete('estacion');
-                }
+                if (value) url.searchParams.set('estacion', value);
+                else url.searchParams.delete('estacion');
                 window.location.href = url.toString();
             });
         }
 
-        // Selector de rango (mantiene el filtro de estación)
         const chartPeriod = document.getElementById('chartPeriod');
         if (chartPeriod) {
             chartPeriod.addEventListener('change', function() {
                 const estacion = new URLSearchParams(window.location.search).get('estacion');
                 let url = `/dashboard?rango=${this.value}`;
-                if (estacion) {
-                    url += `&estacion=${estacion}`;
-                }
+                if (estacion) url += `&estacion=${estacion}`;
                 window.location.href = url;
             });
         }

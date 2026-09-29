@@ -3,10 +3,10 @@
 {% block content %}
 <div class="login-container">
     <div class="login-logo">
-        <img src="{{ url_for('static', filename='img/logo_forestguard.png') }}" alt="ForestGuard" height="60">
+        <img src="{{ url_for('static', filename='img/logo_phyrosense.svg') }}" alt="PhyroSense" height="72">
     </div>
-    <h2>ForestGuard</h2>
-    <p class="subtitle">Sistema de monitoreo ambiental</p>
+    <h2>PhyroSense</h2>
+    <p class="subtitle">Detección temprana de riesgos en espacios habitados</p>
     <form method="POST">
         <div class="form-group">
             <label><i class="fas fa-user"></i> Usuario</label>
@@ -19,10 +19,10 @@
         <button type="submit"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
     </form>
     <div style="margin-top:15px; text-align:center;">
-        <p style="font-size:12px; color:#718078;">
-            ¿No tienes cuenta? <a href="{{ url_for('register') }}" style="color:#0b4d26; font-weight:600;">Regístrate aquí</a>
+        <p style="font-size:12px; color:#64748B;">
+            ¿No tienes cuenta? <a href="{{ url_for('register') }}" style="color:#0B7A6E; font-weight:600;">Regístrate aquí</a>
         </p>
     </div>
-    <p class="aviso">ForestGuard detecta y monitorea posibles incendios. No reemplaza a los servicios de emergencia.</p>
+    <p class="aviso">PhyroSense monitorea temperatura, humedad, humo y gases para alertar a tiempo. No reemplaza a los servicios de emergencia.</p>
 </div>
 {% endblock %}
